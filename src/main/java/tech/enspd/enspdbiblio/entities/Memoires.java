@@ -3,7 +3,7 @@ package tech.enspd.enspdbiblio.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "MEMOIRES")
+@Table(name = "Memoires")
 public class Memoires {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
