@@ -1,17 +1,19 @@
 package tech.enspd.enspdbiblio.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import tech.enspd.enspdbiblio.entities.Utilisateurs;
 import tech.enspd.enspdbiblio.repository.UtilisateursRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+@AllArgsConstructor
 @Service
-public class UtilisateursService {
-
-    @Autowired
+public class UtilisateursService implements UserDetailsService {
     private UtilisateursRepository utilisateurRepository;
 
     public List<Utilisateurs> getAllUtilisateurs() {
@@ -43,5 +45,13 @@ public class UtilisateursService {
 
     public Optional<Utilisateurs> findById(int id) {
         return utilisateurRepository.findById(id);
+    }
+
+
+    @Override
+    public Utilisateurs loadUserByUsername(String nom) throws UsernameNotFoundException {
+        return this.utilisateurRepository
+                .findByMatricule(nom)
+                .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
     }
 }

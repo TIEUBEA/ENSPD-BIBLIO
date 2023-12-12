@@ -12,6 +12,8 @@ public class Memoires {
     private String titre;
     @Column(nullable = false)
     private String auteur;
+    @Column(nullable = false)
+    private String filiere;
     private Integer annee_publication;
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -24,10 +26,11 @@ public class Memoires {
     public Memoires() {
     }
 
-    public Memoires(int id, String titre, String auteur, Integer annee_publication, String description, String lien, Utilisateurs proprietaire) {
+    public Memoires(int id, String titre, String auteur,String filiere, Integer annee_publication, String description, String lien, Utilisateurs proprietaire) {
         this.id = id;
         this.titre = titre;
         this.auteur = auteur;
+        this.filiere = filiere;
         this.annee_publication = annee_publication;
         this.description = description;
         this.lien = lien;
@@ -56,6 +59,14 @@ public class Memoires {
 
     public void setAuteur(String auteur) {
         this.auteur = auteur;
+    }
+
+    public String getFiliere() {
+        return filiere;
+    }
+
+    public void setFiliere(String filiere) {
+        this.filiere = filiere;
     }
 
     public Integer getAnnee_publication() {

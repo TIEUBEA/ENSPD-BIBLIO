@@ -1,10 +1,23 @@
 package tech.enspd.enspdbiblio.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "UTILISATEURS")
-public class Utilisateurs {
+public class Utilisateurs implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -12,21 +25,10 @@ public class Utilisateurs {
     private String nom;
     @Column(nullable = false, unique = true)
     private String matricule;
-    @Column(nullable = false)
-    private String mot_de_passe;
-    @Column(nullable = false)
-    private boolean est_admin;
+    private boolean actif = false;
 
-    public Utilisateurs() {
-    }
-
-    public Utilisateurs(int id, String nom, String matricule, String mot_de_passe, boolean est_admin) {
-        this.id = id;
-        this.nom = nom;
-        this.matricule = matricule;
-        this.mot_de_passe = mot_de_passe;
-        this.est_admin = est_admin;
-    }
+    @OneToOne(cascade = CascadeType.ALL)
+    private Role role;
 
     public int getId() {
         return id;
@@ -52,19 +54,54 @@ public class Utilisateurs {
         this.matricule = matricule;
     }
 
-    public String getMot_de_passe() {
-        return mot_de_passe;
+    public boolean isActif() {
+        return actif;
     }
 
-    public void setMot_de_passe(String mot_de_passe) {
-        this.mot_de_passe = mot_de_passe;
+    public void setActif(boolean actif) {
+        this.actif = actif;
     }
 
-    public boolean isEst_admin() {
-        return est_admin;
+    public Role getRole() {
+        return role;
     }
 
-    public void setEst_admin(boolean est_admin) {
-        this.est_admin = est_admin;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+this.role.getLibelle()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.matricule;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.nom;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.actif;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.actif;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.actif;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.actif;
     }
 }

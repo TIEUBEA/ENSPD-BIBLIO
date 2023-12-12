@@ -11,6 +11,8 @@ CREATE TABLE MEMOIRES (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
     auteur VARCHAR(100) NOT NULL,
+    titre VARCHAR(255) NOT NULL,
+    departement VARCHAR(255) NOT NULL,
     annee_publication INT,
     description TEXT,
     lien VARCHAR(255) NOT NULL

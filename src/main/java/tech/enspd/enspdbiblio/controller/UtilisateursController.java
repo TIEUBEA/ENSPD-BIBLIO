@@ -1,13 +1,18 @@
 package tech.enspd.enspdbiblio.controller;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import tech.enspd.enspdbiblio.dto.AuthentificationDTO;
 import tech.enspd.enspdbiblio.entities.Utilisateurs;
+import tech.enspd.enspdbiblio.securite.JwtService;
 import tech.enspd.enspdbiblio.service.UtilisateursService;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -15,10 +20,11 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(path = "utilisateurs")
 public class UtilisateursController {
 
-    @Autowired
-    private UtilisateursService utilisateurService; // Injection du service pour gérer les opérations sur les Utilisateurs
+    private AuthenticationManager authenticationManager;
+    private UtilisateursService utilisateurService;
+    private JwtService jwtService;
 
-    // Endpoint pour récupérer tous les utilisateurs
+
 
     @GetMapping
     public List<Utilisateurs> getAllUtilisateurs() {
@@ -48,6 +54,30 @@ public class UtilisateursController {
     @DeleteMapping("/{id}")
     public void deleteUtilisateur(@PathVariable int id) {
         utilisateurService.deleteUtilisateur(id);
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    public String userEndpoint() {
+        return "This is a user endpoint!";
+    }
+
+    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String adminEndpoint() {
+        return "This is an admin endpoint!";
+    }
+
+    @PostMapping(path = "connexion")
+    public Map<String, String> connexion(@RequestBody AuthentificationDTO authentificationDTO) {
+        final Authentication authenticate = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authentificationDTO.nom(), authentificationDTO.matricule())
+        );
+
+        if(authenticate.isAuthenticated()) {
+            return this.jwtService.generate(authentificationDTO.nom());
+        }
+        return null;
     }
 
 }
