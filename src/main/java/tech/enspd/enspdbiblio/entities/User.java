@@ -2,60 +2,76 @@ package tech.enspd.enspdbiblio.entities;
 
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.Collections;
 
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "User")
-public class User {
+public class User  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
+    @Column(nullable = false, unique = true)
+    private String nom;
     @Column(nullable = false, unique = true)
     private String matricule;
     @Column(nullable = false, unique = true)
     private String email;
-    private String role;
+    @Column(name = "mot_de_passe")
+    private String mdp;
 
-    public User() {
+    private boolean actif = false;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Role role;
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_"+this.role.getLibelle()));
     }
 
-    public User(Long id, String matricule, String email, String role) {
-        this.id = id;
-        this.matricule = matricule;
-        this.email = email;
-        this.role = role;
+    @Override
+    public String getPassword() {
+        return this.mdp;
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String getUsername() {
+        return this.email;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.actif;
     }
 
-    public String getMatricule() {
-        return matricule;
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.actif;
     }
 
-    public void setMatricule(String matricule) {
-        this.matricule = matricule;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.actif;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    @Override
+    public boolean isEnabled() {
+        return this.actif;
     }
 }

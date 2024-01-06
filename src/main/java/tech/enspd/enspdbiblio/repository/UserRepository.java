@@ -1,12 +1,10 @@
 package tech.enspd.enspdbiblio.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import tech.enspd.enspdbiblio.entities.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByMatricule(String matricule);
+import java.util.Optional;
 
-    User findByEmail(String username);
-
-    User findByEmailAndMatricule(String email, String matricule);
+public interface UserRepository extends CrudRepository <User, Integer > {
+    Optional<User> findByEmail(String email);
 }
