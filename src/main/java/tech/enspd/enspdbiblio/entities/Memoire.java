@@ -27,6 +27,9 @@ public class Memoire {
     private String filiere;
     private Integer annee;
 
+    @OneToOne
+    private User user;
+
     @Column(nullable = false)
     private String lien;
 

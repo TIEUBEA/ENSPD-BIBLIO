@@ -42,7 +42,7 @@ public class JwtService {
     public Map<String, String> generate(String username) {
         User user = this.userService.loadUserByUsername(username);
         this.disableTokens(user);
-        final Map<String, String> jwtMap = this.generateJwt(user);
+        final Map<String, String> jwtMap = new java.util.HashMap<>(this.generateJwt(user));
 
         RefreshToken refreshToken = RefreshToken.builder()
                 .valeur(UUID.randomUUID().toString())

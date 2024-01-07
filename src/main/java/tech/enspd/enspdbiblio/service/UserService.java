@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import tech.enspd.enspdbiblio.entities.Role;
 import tech.enspd.enspdbiblio.entities.User;
 import tech.enspd.enspdbiblio.entities.Validation;
+import tech.enspd.enspdbiblio.enums.TypeDeRole;
 import tech.enspd.enspdbiblio.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -61,5 +64,14 @@ public class UserService implements UserDetailsService {
         return this.userRepository
                 .findByEmail(username)
                 .orElseThrow(() -> new  UsernameNotFoundException("Aucun utilisateur ne corespond à cet identifiant"));
+    }
+
+    public List<User> liste() {
+        final Iterable<User> userIterable = this.userRepository.findAll();
+        List<User>  users = new ArrayList();
+        for (User user : userIterable) {
+            users.add(user);
+        }
+        return users;
     }
 }

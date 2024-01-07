@@ -1,13 +1,10 @@
 package tech.enspd.enspdbiblio.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import tech.enspd.enspdbiblio.service.TypeDeRole;
+import lombok.*;
+import tech.enspd.enspdbiblio.enums.TypeDeRole;
 
-
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
