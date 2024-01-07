@@ -26,13 +26,13 @@ public class MemoireService {
         return (List<Memoire>) this.memoireRepository.findAll();
     }
 
-    public List<Memoire> rechercherMemoire(String nom, String filiere, int annee){
+    public List<Memoire> rechercherMemoire(String titre, String filiere, int annee){
 
         List<Memoire> memoires = (List<Memoire>) memoireRepository.findAll();
 
         return memoires.stream()
                 .filter(memoire ->
-                        (nom == null || memoire.getTitre().contains(nom)) &&
+                        (titre == null || memoire.getTitre().contains(titre)) &&
                                 (filiere == null || memoire.getFiliere().equals(filiere)) &&
                                 (annee == 0 || memoire.getAnnee() == annee))
                 .collect(Collectors.toList());

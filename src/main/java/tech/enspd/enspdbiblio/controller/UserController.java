@@ -55,8 +55,8 @@ public class UserController {
         return null;
     }
 
-    @PreAuthorize("hasAnyAuthority('ADMINISTRATEUR_READ', 'MANAGER_READ')")
-    @GetMapping
+    @PreAuthorize("hasAnyAuthority('ADMINISTRATEUR)")
+    @GetMapping(path = "/liste des utilisateurs")
     public List<User> liste() {
         return this.userService.liste();
     }
